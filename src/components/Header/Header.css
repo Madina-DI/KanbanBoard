@@ -1,14 +1,18 @@
-.header {
+.user {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
+    background-color: #0067A3;
 }
 
-.user-menu {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.user-name {
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 28px;
+    line-height: 32.81px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    padding-left: 20px;
 }
+
+

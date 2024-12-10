@@ -1,13 +1,15 @@
 import React from 'react';
 import './Header.css';
+import './DropdownMenu/DropdownMenu.js';
+import DropdownMenu from './DropdownMenu/DropdownMenu.js';
+
 
 const Header = () => {
     return (
         <header>
-            <h1>Awesome Kanban Board</h1>
-            <div className="user-menu">
-                <span className="avatar">A</span>
-                <span className="arrow">▼</span>
+            <div className="user">
+                <h1 className="user-name">Awesome Kanban Board</h1>
+                <DropdownMenu />
             </div>
         </header>
     )
