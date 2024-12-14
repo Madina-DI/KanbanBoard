@@ -1,0 +1,7 @@
+.task-board {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #0079BF;
+}
