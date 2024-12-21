@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import './TaskList.css';
 
-const TaskList = ({ title, tasks, data, setData, moveTaskToReady, backlogTasks }) => {
+const TaskList = ({ title, tasks, data, setData, moveTask, backlogTasks, readyTasks, inprogressTasks }) => {
     const [newTaskName, setNewTaskName] = useState('');
     const [isAddingTask, setIsAddingTask] = useState(false);
     const [selectedTask, setSelectedTask] = useState('');
+    const [isdropDownVisible, setIsDropDownVisible] = useState(false);
 
     const handleMoveTask = () => {
         if (selectedTask) {
-            moveTaskToReady(selectedTask); // Перемещаем задачу
+            moveTask(selectedTask); // Перемещаем задачу
             setSelectedTask(''); // Сбрасываем выбранное значение
         }
 
@@ -36,6 +37,8 @@ const TaskList = ({ title, tasks, data, setData, moveTaskToReady, backlogTasks }
         setIsAddingTask(false);
     };
 
+
+
     return (
         <div className="task-list">
             <h3 className="task-list__title">{title}</h3>
@@ -46,23 +49,6 @@ const TaskList = ({ title, tasks, data, setData, moveTaskToReady, backlogTasks }
                     </div>
                 ))}
             </div>
-            {title === 'ready' && backlogTasks.length > 0 && (
-                <div className="task-list__dropdown">
-                    <select
-                        value={selectedTask}
-                        onChange={(e) => setSelectedTask(e.target.value)}
-                    >
-                        <option value="">Select a task</option>
-                        {backlogTasks.map((task) => (
-                            <option key={task.id} value={task.id}>
-                                {task.name}
-                            </option>
-                        ))}
-                    </select>
-                    <button onClick={handleMoveTask}>+Add card</button>
-                </div>
-            )}
-
             {title === 'backlog' && (
                 <div className='task-list__button'>
                     {isAddingTask ? (
@@ -82,8 +68,93 @@ const TaskList = ({ title, tasks, data, setData, moveTaskToReady, backlogTasks }
                     )}
                 </div>
             )}
+            {title === 'ready' && backlogTasks.length > 0 && (
+                <div className="task-list__dropdown">
+                    {!isdropDownVisible ? (
+                        <button 
+                        className='task-list__button-add' 
+                        onClick={() => setIsDropDownVisible(true)}>+Add card</button>
+                    ) : (
+                        <div>
+                            <select 
+                            className='task-list__dropdown-select' 
+                            value={selectedTask} 
+                            onChange={(e) => setSelectedTask(e.target.value)}
+                            >
+                                <option  value="">Select a task</option>
+                                {backlogTasks.map((task) => (
+                                    <option key={task.id} value={task.id}>
+                                        {task.name}
+                                    </option>
+                                ))}
+                            </select>
+                            <button 
+                            className=''
+                            onClick={() => {
+                                handleMoveTask();
+                                setIsDropDownVisible(false);
+                            }}
+                            > Submit
+                            </button>
+                        </div>
+                    )}
+                </div>
+            )}
+            {title === 'in progress' && readyTasks.length > 0 && (
+                <div className="task-list__dropdown">
+                    {!isdropDownVisible ? (
+                        <button
+                        className='task-list__button-add'
+                        onClick={() => setIsDropDownVisible (true)}>+Add card</button>
+                    ) : (
+                        <div>
+                            <select 
+                            className='task-list__dropdown-select' 
+                            value={selectedTask}
+                            onChange={(e) => setSelectedTask(e.target.value)}
+                            >
+                                <option value="">Select a task</option>
+                                {readyTasks.map((task) => (
+                                    <option key={task.id} value={task.id}>
+                                        {task.name}
+                                    </option>
+                                ))}
+                            </select>
+                            <button
+                            className=''
+                            onClick={() => {
+                                handleMoveTask();
+                                setIsDropDownVisible(false);
+                            }}>Submit</button>
+                        </div>
+                    )}
+                </div>
+            )}
+            {title === 'finished' && inprogressTasks.length > 0 && (
+                <div className="task-list__dropdown">
+                    {!isdropDownVisible ? (
+                        <button className='task-list__button-add' onClick={() => handleMoveTask(true)}>+Add card</button>
+                    ) : (
+                        <div>
+                            <select className='task-list__dropdown-select' value={selectedTask}onChange={(e) => setSelectedTask(e.target.value)}>
+                                <option value="">Select a task</option>
+                                {inprogressTasks.map((task) => (
+                                    <option key={task.id} value={task.id}>
+                                        {task.name}
+                                    </option>
+                                ))}
+                            </select>
+                            <button className='' onClick={() => {
+                                handleMoveTask();
+                                isdropDownVisible(false);
+                            }}>Submit</button>
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 };
+
 
 export default TaskList;

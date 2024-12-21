@@ -4,22 +4,22 @@ import TaskList from '../TaskList/TaskList';
 
 const TaskBoard = ({ data, setData }) => {
 
-    const moveTaskToReady = (taskId) => {
+    const moveTask = (taskId) => {
         let taskToMove = null;
-        const updatedData = data.map((column) => {
-            if (column.title === 'backlog') {
-                taskToMove = column.issues.find((issue) => issue.id === taskId); //находим задачу которую нужно перенести из колонки backlog
+        const updatedData = data.map((column, index) => {
+            if (column.issues.some((issue) => issue.id === taskId)) {
+                taskToMove = column.issues.find((issue) => issue.id === taskId); //находим задачу которую нужно перенести 
                 return {
                     ...column,
-                    issues: column.issues.filter((issue) => issue.id !== taskId), //исключаем ее из колонки backlog
+                    issues: column.issues.filter((issue) => issue.id !== taskId), //исключаем ее из текущей колонки 
                 };
             } 
 
-            if (column.title === 'ready' && taskToMove) {
+            if (taskToMove && index > 0 && data[index - 1].issues.length > 0) {
 
                 return {
                 ...column,
-                issues: [...column.issues, taskToMove], // Добавляем задачу в Ready
+                issues: [...column.issues, taskToMove], // Добавляем задачу 
                 };
             } 
             return column; //остальные колонки остаются без изменений
@@ -34,10 +34,12 @@ return (
             key={column.title} 
             title={column.title} 
             tasks={column.issues} 
-            moveTaskToReady={moveTaskToReady}
+            moveTask={moveTask}
             data={data}
             setData={setData}
             backlogTasks={data.find((col) => col.title === 'backlog')?.issues || []}
+            readyTasks={data.find((col) => col.title === 'ready')?.issues || []}
+            inprogressTasks={data.find((col) => col.title === 'in progress')?.issues || []}
             />
         ))}
     </div>
