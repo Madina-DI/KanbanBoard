@@ -1,15 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './TaskList.css';
+import '@fontsource/roboto'; /* Основной стиль */
+import { Link } from 'react-router-dom';
 
 const TaskList = ({ title, tasks, data, setData, moveTask, backlogTasks, readyTasks, inprogressTasks }) => {
     const [newTaskName, setNewTaskName] = useState('');
     const [isAddingTask, setIsAddingTask] = useState(false);
     const [selectedTask, setSelectedTask] = useState('');
     const [isdropDownVisible, setIsDropDownVisible] = useState(false);
+    // const [isAddCardDisabled, setIsAddCardDisabled] = useState(false);
+    const [isDisabled, setIsDisabled] = useState(false);
 
-    const handleMoveTask = () => {
+
+    useEffect(() => {
+        
+        if (title === 'ready') {
+            setIsDisabled(backlogTasks.length === 0); // Если Backlog пустой, отключаем кнопку
+        } else if (title === 'in progress') {
+            setIsDisabled(readyTasks.length === 0); // Если Ready пустой, отключаем кнопку
+        } else if (title === 'finished') {
+            setIsDisabled(inprogressTasks.length === 0); // Если In Progress пустой, отключаем кнопку
+        }
+    }, [backlogTasks, readyTasks, inprogressTasks, title]); // Зависимости для динамического обновления
+
+    const handleMoveTask = (currentColumnTitle) => {
         if (selectedTask) {
-            moveTask(selectedTask); // Перемещаем задачу
+            moveTask(selectedTask, currentColumnTitle); // Перемещаем задачу
             setSelectedTask(''); // Сбрасываем выбранное значение
         }
 
@@ -45,10 +61,13 @@ const TaskList = ({ title, tasks, data, setData, moveTask, backlogTasks, readyTa
             <div className="task-list__text">
                 {tasks.map((task) => (
                     <div key={task.id} className="task-list__text-details">
-                        {task.name}
+                        <Link to={`/tasks/${task.id}`}>
+                            {task.name}
+                        </Link>
                     </div>
                 ))}
             </div>
+            
             {title === 'backlog' && (
                 <div className='task-list__button'>
                     {isAddingTask ? (
@@ -61,93 +80,86 @@ const TaskList = ({ title, tasks, data, setData, moveTask, backlogTasks, readyTa
                                     onChange={(e) => setNewTaskName(e.target.value)}
                                 />
                             </div>
-                            <button onClick={handleMoveTask} className='task-list__button-submit'>Submit</button>
+                            <button onClick={() => handleMoveTask('backlog')} className='task-list__button-submit'>Submit</button>
                         </div>
                     ) : (
+
                         <button onClick={() => setIsAddingTask(true)} className='task-list__button-add'>+Add Card</button>
                     )}
                 </div>
             )}
-            {title === 'ready' && backlogTasks.length > 0 && (
+            {title === 'ready' && (
                 <div className="task-list__dropdown">
-                    {!isdropDownVisible ? (
+
+                    {!isdropDownVisible ? (                    
                         <button 
-                        className='task-list__button-add' 
-                        onClick={() => setIsDropDownVisible(true)}>+Add card</button>
+                        className={`task-list__button-add ${isDisabled ? 'disabled' : ''}`} 
+                        onClick={() => setIsDropDownVisible(true)}
+                        disabled={isDisabled}>
+                        +Add card
+                    </button>
+                    
                     ) : (
                         <div>
-                            <select 
-                            className='task-list__dropdown-select' 
-                            value={selectedTask} 
-                            onChange={(e) => setSelectedTask(e.target.value)}
-                            >
-                                <option  value="">Select a task</option>
+                            <select className='task-list__dropdown-select' value={selectedTask} onChange={(e) => setSelectedTask(e.target.value)}>
+                                <option  value=""></option>
                                 {backlogTasks.map((task) => (
-                                    <option key={task.id} value={task.id}>
+                                    <option onClick={() => {
+                                        moveTask(selectedTask, title);
+                                        setIsDropDownVisible(false);
+                                    }} key={task.id} value={task.id}>
                                         {task.name}
                                     </option>
                                 ))}
                             </select>
-                            <button 
-                            className=''
-                            onClick={() => {
-                                handleMoveTask();
-                                setIsDropDownVisible(false);
-                            }}
-                            > Submit
-                            </button>
+                    
                         </div>
                     )}
                 </div>
             )}
-            {title === 'in progress' && readyTasks.length > 0 && (
+
+            {title === 'in progress' && (
                 <div className="task-list__dropdown">
                     {!isdropDownVisible ? (
-                        <button
-                        className='task-list__button-add'
-                        onClick={() => setIsDropDownVisible (true)}>+Add card</button>
+                        <button className='task-list__button-add' onClick={() => setIsDropDownVisible (true)}
+                        disabled={isDisabled}>+Add card</button>
                     ) : (
                         <div>
-                            <select 
-                            className='task-list__dropdown-select' 
-                            value={selectedTask}
-                            onChange={(e) => setSelectedTask(e.target.value)}
-                            >
-                                <option value="">Select a task</option>
+                            <select className='task-list__dropdown-select' value={selectedTask} onChange={(e) => setSelectedTask(e.target.value)}>
+                                <option value=""></option>
                                 {readyTasks.map((task) => (
-                                    <option key={task.id} value={task.id}>
+                                    <option onClick={() => {
+                                        moveTask(selectedTask, title);
+                                        setIsDropDownVisible(false)
+                                    }} 
+                                    key={task.id} value={task.id}>
                                         {task.name}
                                     </option>
                                 ))}
                             </select>
-                            <button
-                            className=''
-                            onClick={() => {
-                                handleMoveTask();
-                                setIsDropDownVisible(false);
-                            }}>Submit</button>
                         </div>
                     )}
                 </div>
             )}
-            {title === 'finished' && inprogressTasks.length > 0 && (
+
+            {title === 'finished' && (
                 <div className="task-list__dropdown">
                     {!isdropDownVisible ? (
-                        <button className='task-list__button-add' onClick={() => handleMoveTask(true)}>+Add card</button>
+                        <button className='task-list__button-add' onClick={() => setIsDropDownVisible (true)}
+                        disabled={isDisabled}>+Add card</button>
                     ) : (
                         <div>
-                            <select className='task-list__dropdown-select' value={selectedTask}onChange={(e) => setSelectedTask(e.target.value)}>
-                                <option value="">Select a task</option>
+                            <select className='task-list__dropdown-select' value={selectedTask} onChange={(e) => setSelectedTask(e.target.value)}>
+                                <option value=""></option>
                                 {inprogressTasks.map((task) => (
-                                    <option key={task.id} value={task.id}>
-                                        {task.name}
+                                    <option onClick={() => {
+                                        handleMoveTask('finished');
+                                        setIsDropDownVisible(false);
+                                    }} key={task.id} value={task.id}>
+                                        {task.name} 
                                     </option>
                                 ))}
                             </select>
-                            <button className='' onClick={() => {
-                                handleMoveTask();
-                                isdropDownVisible(false);
-                            }}>Submit</button>
                         </div>
                     )}
                 </div>
@@ -157,4 +169,4 @@ const TaskList = ({ title, tasks, data, setData, moveTask, backlogTasks, readyTa
 };
 
 
-export default TaskList;
+export default TaskList; 

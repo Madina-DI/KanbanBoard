@@ -1,3 +1,7 @@
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
 .task-list {
     width: 282px;
     padding: 0px 20px;
@@ -8,7 +12,14 @@
     font-size: 18px;
     line-height: 21.09px;
     border-radius: 8px;
+
+    height: 650px; /* Задаем фиксированную высоту колонки */
+    overflow-y: auto; /* Добавляем вертикальную прокрутку */
+    overflow-x: hidden; /* Отключаем горизонтальную прокрутку */
+    scrollbar-width: thin;
 }
+
+
 
 .task-list__title {
     text-align: left;
@@ -37,6 +48,7 @@
 
 .task-list__button {
     text-align: left;
+    align-self: center;
 }
 
 .task-list__button-input {
@@ -45,14 +57,14 @@
 }
 
 .task-list__button-text {
-    width: 235px;
+    width: 224px;
     height: 35px;
     border: 1px solid #E0E0E0;
     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     padding: 0px 12px;
-    margin: 0px 0px 20px 8px;
-    font-family: Roboto;
+    margin: 0px 0px 20px 0px;
+    font-family: 'Roboto' sans-serif;
     font-size: 18px;
 }
 
@@ -62,6 +74,12 @@
     height: 29px;
     margin: 0px 0px 8px 8px;
     border-radius: 8px;
+    cursor: pointer;
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: 400;
+    font-family: 'Roboto' sans-serif;
+
 }
 
 .task-list__button-add {
@@ -73,7 +91,6 @@
 
 .task-list__dropdown {
     display: flex;
-    flex-direction: column;
 }
 
 .task-list__dropdown-select {
@@ -84,7 +101,13 @@
     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     padding: 0px 12px;
-    margin: 0px 0px 20px 8px;
-    font-family: Roboto;
+    margin: 0px 0px 20px 0px;
+    font-family: 'Roboto' sans-serif;
     font-size: 18px;
 }
+
+.task-list__button-add:hover {
+    background-color: #FFFFFF;
+    cursor: pointer;
+}
+
