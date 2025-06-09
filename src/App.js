@@ -15,7 +15,7 @@ const App = () => {
     if (storedData) {
       setData(JSON.parse(storedData));
     } else {
-      setData(mockData);
+      // setData(mockData);
       localStorage.setItem('kanbanData', JSON.stringify(mockData));
 
     }

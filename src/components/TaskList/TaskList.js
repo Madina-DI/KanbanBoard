@@ -10,6 +10,8 @@ const TaskList = ({ title, tasks, data, setData, moveTask, backlogTasks, readyTa
     const [isdropDownVisible, setIsDropDownVisible] = useState(false);
     // const [isAddCardDisabled, setIsAddCardDisabled] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
+    const [isDropDownVisibleReady, setIsDropDownVisibleReady] = useState(false);
+
 
 
     useEffect(() => {
@@ -90,38 +92,39 @@ const TaskList = ({ title, tasks, data, setData, moveTask, backlogTasks, readyTa
             )}
             {title === 'ready' && (
                 <div className="task-list__dropdown">
-
-                    {!isdropDownVisible ? (                    
-                        <button 
-                        className={`task-list__button-add ${isDisabled ? 'disabled' : ''}`} 
-                        onClick={() => setIsDropDownVisible(true)}
-                        disabled={isDisabled}>
-                        +Add card
-                    </button>
-                    
+                    {!isDropDownVisibleReady ? (
+                    <button 
+                        className="task-list__button-add" 
+                        onClick={() => setIsDropDownVisibleReady(true)}
+                        disabled={backlogTasks.length === 0}>+Add card</button>
                     ) : (
-                        <div>
-                            <select className='task-list__dropdown-select' value={selectedTask} onChange={(e) => setSelectedTask(e.target.value)}>
-                                <option  value=""></option>
-                                {backlogTasks.map((task) => (
-                                    <option onClick={() => {
-                                        moveTask(selectedTask, title);
-                                        setIsDropDownVisible(false);
-                                    }} key={task.id} value={task.id}>
-                                        {task.name}
-                                    </option>
-                                ))}
-                            </select>
-                    
-                        </div>
+                    <div>
+                        <select
+                            className="task-list__dropdown-select"
+                            value={selectedTask}
+                            onChange={(e) => {
+                                const selectedId = e.target.value;
+                                setSelectedTask(selectedId);
+                                moveTask(selectedId, 'ready');
+                                setIsDropDownVisibleReady(false);
+                            }}
+                        >
+                            <option value=""></option>
+                            {backlogTasks.map((task) => (
+                                <option key={task.id} value={task.id}>
+                                {task.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
                     )}
                 </div>
             )}
-
             {title === 'in progress' && (
                 <div className="task-list__dropdown">
                     {!isdropDownVisible ? (
-                        <button className='task-list__button-add' onClick={() => setIsDropDownVisible (true)}
+                        <button className='task-list__button-add' 
+                        onClick={() => setIsDropDownVisible (true)}
                         disabled={isDisabled}>+Add card</button>
                     ) : (
                         <div>
