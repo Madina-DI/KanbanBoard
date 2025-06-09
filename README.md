@@ -31,3 +31,34 @@ git clone https://github.com/Madina-DI/KanbanBoard.git
 cd KanbanBoard
 npm install
 npm start
+
+## 📸 Preview
+
+ ![Kanban Board UI](./screenshots/kanban-preview.jpg)
+
+---
+
+## 🗂 Project Structure
+
+src/
+├── components/
+│ ├── Header/
+│ ├── Footer/
+│ ├── TaskList/
+│ ├── TaskBoard/
+│ └── TaskDetails/
+├── data/
+│ └── mockData.js
+├── App.js
+└── index.js
+
+## 🌱 Future Enhancements
+
+- Implement drag-and-drop functionality
+- Allow task editing and deletion
+- Add user login and authentication
+- Sync data with a real backend or Firebase
+
+## 🔗 Live Demo
+
+[Click here to try the app](https://your-live-demo-url.com)
