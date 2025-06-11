@@ -9,13 +9,14 @@ import React, { useState, useEffect } from 'react';
 
 const App = () => {
   const [data, setData] = useState(null);
+// localStorage.removeItem('kanbanData');
 
   useEffect (() => {
     const storedData = localStorage.getItem('kanbanData');
     if (storedData) {
       setData(JSON.parse(storedData));
     } else {
-      // setData(mockData);
+      setData(mockData);
       localStorage.setItem('kanbanData', JSON.stringify(mockData));
 
     }
