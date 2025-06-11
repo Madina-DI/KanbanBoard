@@ -61,4 +61,4 @@ src/
 
 ## 🔗 Live Demo
 
-[Click here to try the app](https://your-live-demo-url.com)
+[Click here to try the app](https://kanban-board-one-inky.vercel.app)
